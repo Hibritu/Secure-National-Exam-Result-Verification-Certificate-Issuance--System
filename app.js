@@ -11,12 +11,14 @@ app.use(cors());
 app.use(express.json());
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true, useUnifiedTopology: true
-}).then(() => console.log('MongoDB connected'))
-  .catch(err => console.error('MongoDB connection error:', err));
+
+
+  mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log('MongoDB connected'))
+  .catch(err => console.error(err));
 
 // Swagger setup
+
 const swaggerOptions = {
   definition: {
     openapi: "3.0.0",
@@ -25,7 +27,21 @@ const swaggerOptions = {
       version: "1.0.0",
       description: "API for exam results and certificate issuance"
     },
-    servers: [{ url: "http://localhost:" + process.env.PORT }]
+    servers: [{ url: "http://localhost:" + process.env.PORT }],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT"
+        }
+      }
+    },
+    security: [
+      {
+        bearerAuth: []
+      }
+    ]
   },
   apis: ['./routes/*.js'],
 };

@@ -9,10 +9,10 @@ const crypto = require('crypto');
  * @swagger
  * /api/certificates/generate:
  *   post:
- *     summary: Generate a certificate for a student exam result (admin only)
- *     tags: [Certificate]
+ *     summary: Generate certificate for a user exam result
  *     security:
  *       - bearerAuth: []
+ *     tags: [Certificates]
  *     requestBody:
  *       required: true
  *       content:
@@ -28,11 +28,12 @@ const crypto = require('crypto');
  *               examResultId:
  *                 type: string
  *     responses:
- *       201:
- *         description: Certificate generated
- *       400:
- *         description: Bad request
+ *       200:
+ *         description: Certificate generated successfully
+ *       401:
+ *         description: Unauthorized - missing or invalid token
  */
+
 router.post('/generate', auth, adminOnly, async (req, res) => {
   try {
     const { userId, examResultId } = req.body;
